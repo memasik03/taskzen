@@ -11,19 +11,29 @@ const TaskBox = styled.div`
 	display: flex;
 	border-radius: 30px;
 	overflow: hidden;
-	gap: 7px;
+	gap: 3px;
 `
 
 interface ITaskLine {
 	taskInfo: TypeTaskLine
 	onAddedTask: () => void
+	setTask: (id: number, name: string, description: string) => void
 }
 
-export function TaskLine({ taskInfo, onAddedTask }: ITaskLine): JSX.Element {
+export function TaskLine({
+	taskInfo,
+	onAddedTask,
+	setTask,
+}: ITaskLine): JSX.Element {
 	return (
 		<TaskBox>
 			<TaskTime time={taskInfo.time} />
-			<TaskLineInfo tasks={taskInfo.tasks} />
+			<TaskLineInfo
+				tasks={taskInfo.tasks}
+				setTask={(id: number, name: string, description: string) =>
+					setTask(id, name, description)
+				}
+			/>
 			<AddTask onClick={onAddedTask} />
 		</TaskBox>
 	)

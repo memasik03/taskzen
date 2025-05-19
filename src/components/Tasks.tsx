@@ -1,6 +1,6 @@
 import { JSX, useState } from 'react'
 import styled from 'styled-components'
-import { TypeTaskLine } from '../types'
+import { EditTaskFunction, TypeTaskLine } from '../types'
 import { TaskLine } from './TaskLine'
 import { Title } from './Title'
 
@@ -15,7 +15,7 @@ const TaskLines = styled.div`
 	width: 100%;
 	display: flex;
 	flex-direction: column;
-	gap: 10px;
+	gap: 3px;
 	margin-top: 20px;
 `
 
@@ -25,31 +25,48 @@ export function Tasks(): JSX.Element {
 			id: index,
 			time: `${String(index).padStart(2, '0')}:00`,
 			tasks: [],
+			lastId: 0,
 		}))
 	)
 
-	function addTask(time: string): void {
+	function addTask(time: string, name: string, description: string): void {
 		setTasks((prev: TypeTaskLine[]) => {
 			const found: TypeTaskLine | undefined = prev.find(l => l.time === time)
 			if (!found) return prev
 
-			return prev.map(task =>
+			return prev.map((task: TypeTaskLine, index: number) =>
 				task.id === found.id
 					? {
 							...task,
 							tasks: [
 								...task.tasks,
 								{
-									id: task.tasks.length
-										? task.tasks[task.tasks.length - 1].id + 1
-										: 0,
-									name: `${task.tasks.length}`,
-									description: '',
+									id: prev[index].lastId,
+									name: name,
+									description: description,
 								},
 							],
+							lastId: prev[index].lastId + 1,
 					  }
 					: task
 			)
+		})
+	}
+
+	const editTask: EditTaskFunction = (time, id, name, description) => {
+		setTasks((prev: TypeTaskLine[]) => {
+			return prev.map(taskLine => {
+				if (taskLine.time !== time) return taskLine // Оставляем неизменённым
+
+				return {
+					...taskLine,
+					tasks: taskLine.tasks.map(task =>
+						task.id === id
+							? { id: id, name: name, description: description }
+							: task
+					),
+				}
+			})
 		})
 	}
 
@@ -61,7 +78,10 @@ export function Tasks(): JSX.Element {
 					<TaskLine
 						taskInfo={t}
 						key={t.time}
-						onAddedTask={() => addTask(t.time)}
+						onAddedTask={() => addTask(t.time, 'rat2', 'rat2')}
+						setTask={(id: number, name: string, description: string) =>
+							editTask(t.time, id, name, description)
+						}
 					/>
 				))}
 			</TaskLines>
