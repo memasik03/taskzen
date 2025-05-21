@@ -1,5 +1,9 @@
-import { JSX } from 'react'
+import { JSX, useState } from 'react'
 import styled from 'styled-components'
+import { TypeTask } from '../types'
+import { Task } from './Task'
+import { TasksList } from './TasksList'
+import { Title } from './Title'
 
 const TasksBox = styled.div`
 	width: 100%;
@@ -8,19 +12,38 @@ const TasksBox = styled.div`
 	border-radius: 20px;
 `
 
-const TaskLines = styled.div`
-	width: 100%;
-	display: flex;
-	flex-direction: column;
-	gap: 3px;
-	margin-top: 20px;
-	background: red;
-`
-
 export function Tasks(): JSX.Element {
+	const [tasks] = useState<TypeTask[]>([
+		{
+			id: 1,
+			name: 'a',
+			description: 'a',
+			start: { hour: 1, minute: 0 },
+			end: { hour: 2, minute: 30 },
+		},
+		{
+			id: 2,
+			name: 'aas',
+			description: 'aadddd',
+			start: { hour: 2, minute: 30 },
+			end: { hour: 3, minute: 0 },
+		},
+		{
+			id: 3,
+			name: 'sdfsg',
+			description: 'sggg gdfgdf gdf',
+			start: { hour: 4, minute: 0 },
+			end: { hour: 23, minute: 0 },
+		},
+	])
 	return (
 		<TasksBox>
-			<TaskLines></TaskLines>
+			<Title>Welcome to taskzen</Title>
+			<TasksList>
+				{tasks.map(t => (
+					<Task tasks={tasks} currentTaskId={t.id} key={t.id} />
+				))}
+			</TasksList>
 		</TasksBox>
 	)
 }
