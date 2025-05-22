@@ -7,6 +7,7 @@ const TasksListBox = styled.div`
 	margin-top: 20px;
 	flex-direction: column;
 	gap: 5px;
+	align-items: flex-start;
 `
 
 export const TasksList: React.FC<PropsWithChildren> = ({ children }) => {

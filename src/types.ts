@@ -1,10 +1,16 @@
-export type TypeTime = { hour: number; minute: number }
-export type TypeTask = {
+export interface TypeTime {
+	hour: number
+	minute: number
+}
+export interface TypeRange {
+	start: TypeTime
+	end: TypeTime
+}
+export interface TypeTask extends TypeRange {
 	id: number
 	name: string
 	description: string
-	start: TypeTime
-	end: TypeTime
+	completed: boolean
 }
 export type EditTaskFunction = (
 	time: string,
@@ -36,11 +42,16 @@ export function getTimeDifference(
 	}
 }
 export function getTimeNumber(time: TypeTime): number {
-	const result: number = parseInt(time.hour.toString() + time.minute.toString())
+	const result: number = Math.sqrt(time.hour * 60 ** 2 + time.minute ** 2)
 	return result > 30 ? result : 30
 }
 export function timeToString(time: TypeTime): string {
 	return `${time.hour.toString().padStart(2, '0')}:${time.minute
 		.toString()
 		.padStart(2, '0')}`
+}
+export function compareTime(firsTime: TypeTime, secondTime: TypeTime): boolean {
+	return (
+		firsTime.hour === secondTime.hour && firsTime.minute === secondTime.minute
+	)
 }

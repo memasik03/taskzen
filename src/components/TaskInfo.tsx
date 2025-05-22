@@ -4,6 +4,9 @@ import { getTimeDifference, getTimeNumber, TypeTask } from '../types'
 
 const TaskInfoBox = styled.div<ITaskInfoBoxProps>`
 	max-width: 250px;
+	width: 100%;
+	display: flex;
+	flex-direction: column;
 	height: ${props => props.height}px;
 	background-color: var(--th-color);
 	padding: 10px;

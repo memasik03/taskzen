@@ -13,6 +13,8 @@ const TaskTimeBox = styled.div`
 	flex-direction: column;
 	align-items: center;
 	gap: 5px;
+	max-width: 100px;
+	width: 100%;
 `
 
 const Time = styled.p`
@@ -25,20 +27,22 @@ const Time = styled.p`
 interface ITaskTime {
 	taskStart: TypeTime
 	taskEnd: TypeTime
-	skipFirstTime?: boolean
+	skipValues?: boolean[]
 }
 
 export function TaskTime({
 	taskStart,
 	taskEnd,
-	skipFirstTime = false,
+	skipValues = [false, false],
 }: ITaskTime): JSX.Element {
 	const height: number = getTimeNumber(getTimeDifference(taskEnd, taskStart))
 	return (
 		<TaskTimeBox>
-			{!skipFirstTime && <Time>{timeToString(taskStart)}</Time>}
-			<TimeArrow height={height + (skipFirstTime ? 25 : 0)} />
-			<Time>{timeToString(taskEnd)}</Time>
+			{!skipValues[0] && <Time>{timeToString(taskStart)}</Time>}
+			<TimeArrow
+				height={height + (skipValues[0] ? 25 : 0) + (skipValues[2] ? 25 : 0)}
+			/>
+			{!skipValues[1] && <Time>{timeToString(taskEnd)}</Time>}
 		</TaskTimeBox>
 	)
 }
