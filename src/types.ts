@@ -12,12 +12,20 @@ export interface TypeTask extends TypeRange {
 	description: string
 	completed: boolean
 }
+export interface TypeEditorTask
+	extends Omit<TypeTask, 'id'>,
+		Partial<Pick<TypeTask, 'id'>> {}
 export type EditTaskFunction = (
 	time: string,
 	id: number,
 	name: string,
 	description: string
 ) => void
+
+export const enum TimeType {
+	hour = 'hour',
+	minute = 'minute',
+}
 
 export function setTime(time: TypeTime, timeToAdd: TypeTime): TypeTime {
 	const date = new Date()
@@ -36,6 +44,15 @@ export function getTimeDifference(
 	const date = new Date()
 	date.setHours(time.hour - takenTime.hour)
 	date.setMinutes(time.minute - takenTime.minute)
+	return {
+		hour: date.getHours(),
+		minute: date.getMinutes(),
+	}
+}
+export function summTime(time: TypeTime, takenTime: TypeTime): TypeTime {
+	const date = new Date()
+	date.setHours(time.hour + takenTime.hour)
+	date.setMinutes(time.minute + takenTime.minute)
 	return {
 		hour: date.getHours(),
 		minute: date.getMinutes(),

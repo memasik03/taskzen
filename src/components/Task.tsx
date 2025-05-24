@@ -13,6 +13,7 @@ interface ITask {
 	tasks: TypeTask[]
 	currentTaskId: number | null
 	prevTaskId: number | null
+	onEditTask: () => void
 	triggerCompleted: () => void
 }
 
@@ -20,6 +21,7 @@ export function Task({
 	tasks,
 	currentTaskId,
 	prevTaskId,
+	onEditTask,
 	triggerCompleted,
 }: ITask): JSX.Element {
 	const taskInfo: TypeTask | undefined = tasks.find(t => t.id === currentTaskId)
@@ -43,6 +45,7 @@ export function Task({
 				skipValues={[skipFirstTime, false]}
 			/>
 			<TaskBlock
+				onEditTask={onEditTask}
 				task={currentTaskId === null ? null : taskInfo}
 				triggerCompleted={triggerCompleted}
 			/>

@@ -1,10 +1,11 @@
 import { Check, Edit } from 'lucide-react'
+import { motion } from 'motion/react'
 import { JSX } from 'react'
 import styled from 'styled-components'
 import { getTimeDifference, TypeTask, TypeTime } from '../types'
 import { TaskAction } from './TaskAction'
 
-const TaskBlockBox = styled.div<ITaskBlockBoxProps>`
+const TaskBlockBox = styled(motion.div)<ITaskBlockBoxProps>`
 	display: flex;
 	padding: 10px;
 	justify-content: space-between;
@@ -12,9 +13,10 @@ const TaskBlockBox = styled.div<ITaskBlockBoxProps>`
 	background-color: var(--th-color);
 	max-width: 400px;
 	width: 100%;
-	opacity: ${props => props.completed === 'true' && '50%'};
-	transition: all 0.2s;
-	text-decoration: ${props => props.completed === 'true' && 'line-through'};
+	h3 {
+		text-decoration: ${props =>
+			props.completed === true ? 'line-through' : 'none'};
+	}
 `
 
 const TaskInfo = styled.div``
@@ -26,7 +28,7 @@ const TaskActions = styled.div`
 `
 
 interface ITaskBlockBoxProps {
-	completed: string
+	completed: boolean
 }
 
 const Name = styled.h3`
@@ -45,10 +47,15 @@ const Description = styled.p`
 
 interface ITaskBlock {
 	task: TypeTask | null
+	onEditTask: () => void
 	triggerCompleted: () => void
 }
 
-export function TaskBlock({ task, triggerCompleted }: ITaskBlock): JSX.Element {
+export function TaskBlock({
+	task,
+	onEditTask,
+	triggerCompleted,
+}: ITaskBlock): JSX.Element {
 	if (!task) return <></>
 	const timeDifference: TypeTime = getTimeDifference(task.end, task.start)
 	const displayTimeHours: string =
@@ -61,7 +68,13 @@ export function TaskBlock({ task, triggerCompleted }: ITaskBlock): JSX.Element {
 		displayTimeMinutes
 
 	return (
-		<TaskBlockBox completed={`${task.completed}`}>
+		<TaskBlockBox
+			layout
+			completed={task.completed}
+			initial={{ scale: 0, opacity: 0 }}
+			animate={{ scale: 1, opacity: !task.completed ? 1 : 0.5 }}
+			exit={{ scale: 0, opacity: 0 }}
+		>
 			<TaskInfo>
 				<Name>
 					{task.name}
@@ -71,7 +84,7 @@ export function TaskBlock({ task, triggerCompleted }: ITaskBlock): JSX.Element {
 			</TaskInfo>
 			<TaskActions>
 				<TaskAction>
-					<Edit size={22} />
+					<Edit size={22} onClick={onEditTask} />
 				</TaskAction>
 				<TaskAction onClick={triggerCompleted}>
 					<Check size={25} />
